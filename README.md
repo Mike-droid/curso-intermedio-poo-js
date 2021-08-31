@@ -257,6 +257,128 @@ deepCopy(obj1);
 
 ## Abstracción y encapsulamiento sin prototipos
 
+### Abstracción con objetos literales y deep copy
+
+```javascript
+const studentBase = {
+  name: undefined,
+  email: undefined,
+  age: undefined,
+  approvedCourses: undefined,
+  learningPaths: undefined,
+  socialMedia: {
+    facebook: undefined,
+    twitter: undefined,
+    instagram: undefined,
+  }
+};
+
+const juan = deepCopy(studentBase);
+Object.seal(juan); //* Ninguna propiedad del objeto Juan se podrá eliminar
+Object.isSealed(juan); //* Pregunta si tiene todas sus propiedades protegidas
+Object.isFrozen(juan); //* Pregunta si tiene todas sus propiedades protegidas y además no se pueden agregar otras
+```
+
+### Factory pattern y RORO
+
+```javascript
+function requiredParam(param) {
+  throw new Error(`Missing required parameter: ${param}`);
+}
+
+function createStudent({
+  name = requiredParam('name'), //Mostará error si está vacío
+  email = requiredParam('email'),
+  age,
+  twitter,
+  facebook,
+  instagram,
+  approvedCourses = [], //valor por defecto
+  learningPaths = [], //valor por defecto
+} = {} /*Por defecto es un objeto vacío*/ ) {
+  return {
+    name,
+    email,
+    age,
+    approvedCourses,
+    learningPaths,
+    socialMedia: {
+      twitter,
+      facebook,
+      instagram
+    },
+  };
+}
+
+const juan = createStudent({
+  name: 'Juan',
+  email: 'juan@gmail.com',
+  age: 20,
+  twitter: '@fjuandc',
+})
+```
+
+### Module pattern y namespaces: propiedades privadas en JavaScript
+
+```javascript
+function createStudent({
+  name = requiredParam('name'),
+  email = requiredParam('email'),
+  age,
+  twitter,
+  facebook,
+  instagram,
+  approvedCourses = [],
+  learningPaths = [],
+} = {} ) {
+  const private = {
+    "_name": name
+  };
+
+  const public = {
+    email,
+    age,
+    approvedCourses,
+    learningPaths,
+    socialMedia: {
+      twitter,
+      facebook,
+      instagram
+    },
+    changeName(newName) {
+      private["_name"] = newName;
+    },
+    readName() {
+      return private["_name"];
+    },
+  };
+
+  Object.defineProperty(public, "readName", {
+    configurable: false,
+    writable: false,
+  });
+
+  Object.defineProperty(public, "changeName", {
+    configurable: false,
+    writable: false,
+  });
+
+  return public;
+}
+
+```
+
+### Getters y setters
+
+```javascript
+get name() {
+  return private["_name"];
+},
+set name(newName) {
+  newName.length !== 0 ? private["_name"] = newName : console.warn("Name can't be empty");
+}
+```
+
 ## Cómo identificar objetos
 
 ## Próximos pasos
