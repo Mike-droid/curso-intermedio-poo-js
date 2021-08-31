@@ -163,6 +163,98 @@ const obj2 = JSON.parse(stringifiedComplexObject); //* Lo convierte en un objeto
 
 ## Recursividad en JavaScript
 
+### Qué es recursividad
+
+Es cuando una función se llama a sí misma. Tenemos que tener un caso base para que esta función se detenga.
+
+Ejemplo básico:
+
+```typescript
+function recursiva(){
+  if(/*validacion*/){
+    // llamados recursivos
+  } esle {
+    // llamados normales, sin recursividad
+  }
+}
+
+
+function recursiva(numerito: number): number {
+  console.log(numerito);
+  if (numerito < 5) {
+    return recursiva(numerito + 1);
+  } else {
+    return 5;
+  }
+}
+
+recursiva(0);
+
+function recursiva(numbersArray: number[] | string[]): void {
+  if (numbersArray.length !== 0) {
+    const firstNum = numbersArray[0];
+    console.log(`first number: ${firstNum}`);
+    numbersArray.shift(); //* elimina el primer elemento del array
+    recursiva(numbersArray);
+  }
+}
+
+recursiva([9,8,7,6,5,4,3,2,1]);
+recursiva(['😎','🤩','😜','🤑']);
+```
+
+[¿Cuándo usar recursividad?](https://infseg.com/informatica/recursividad-cuando-debo-utilizarla/)
+
+### Deep copy con recursividad
+
+```javascript
+const obj1 = {
+  a: 'a',
+  b: 'b',
+  c: {
+    d: 'd',
+    e: 'e',
+  },
+  editA() {
+    this.a = 'AAAAA';
+  }
+};
+
+function isObject(subject) {
+  return typeof subject === 'object' && subject !== null;
+}
+
+function isArray(subject) {
+  return Array.isArray(subject);
+}
+
+function deepCopy(subject) {
+  let copySubject;
+
+  const subjectIsArray = isArray(subject);
+  const subjectIsObject = isObject(subject);
+
+  if (subjectIsArray) {
+    copySubject = [];
+  } else if (subjectIsObject) {
+    copySubject = {};
+  } else {
+    return subject;
+  }
+
+  for(key in subject) {
+    const keyIsObject = isObject(subject[key]);
+
+    //*if else - if else
+    keyIsObject ? copySubject[key] = deepCopy(subject[key]) : subjectIsArray ? copySubject.push(subject[key]) : copySubject[key] = subject[key];
+  }
+
+  return copySubject;
+}
+
+deepCopy(obj1);
+```
+
 ## Abstracción y encapsulamiento sin prototipos
 
 ## Cómo identificar objetos
