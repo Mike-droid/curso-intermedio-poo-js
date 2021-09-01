@@ -381,4 +381,12 @@ set name(newName) {
 
 ## Cómo identificar objetos
 
+### Qué es duck typing
+
+### Duck typing en JavaScript
+
+### Atributos y métodos privados en prototipos
+
+### Creando métodos estáticos en JavaScript
+
 ## Próximos pasos
